@@ -1,5 +1,5 @@
-     These are my learning goals for the 8-week full stack program.
-
+     These are my learning goals for the 8 week full stack program.
+     the line pushing from feature/setup
 Version Control: Learn Git & GitHub workflow, deploy fullstack applications to platforms like Vercel, Netlify, Render, or Heroku, and share live projects.
 
 Code Quality & Tools: Use ESLint, Prettier, Husky, lint-staged, and commitlint to maintain clean, consistent, and professional code.
