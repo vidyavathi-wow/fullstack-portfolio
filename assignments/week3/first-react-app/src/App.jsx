@@ -10,8 +10,7 @@ function App() {
   return (
 <div>
    {/* <AboutMe name={"vidya"} age={23} favHobby="Listening music"/> */}
-   <Demo/>
-   <Check/>
+   <Demo/   <Check/>
 </div>
   )
 }
