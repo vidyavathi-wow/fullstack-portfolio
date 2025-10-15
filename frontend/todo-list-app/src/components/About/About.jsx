@@ -8,4 +8,4 @@ const About = ( => {
   )
 }
 
- default About
+export default About
