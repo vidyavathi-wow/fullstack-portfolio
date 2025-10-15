@@ -4,7 +4,7 @@ const Check = () => {
   return (
     <div>
       
-    </div
+    </div   // <- syntax error: missing closing bracket
   )
 }
 
