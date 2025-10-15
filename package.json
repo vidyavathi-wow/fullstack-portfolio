@@ -2,23 +2,25 @@
   "name": "fullstack-wow",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
     "unused:deps": "depcheck"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "depcheck": "^1.4.7",
     "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-define-config": "^2.1.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-sonarjs": "^3.0.5",
     "husky": "^8.0.0",
     "lint-staged": "^16.1.6",
@@ -27,10 +29,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,md,json}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "**/*.{js,jsx,ts,tsx,css,md,json}": [
       "prettier --write",
       "eslint --fix"
     ]

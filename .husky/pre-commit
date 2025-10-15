@@ -3,3 +3,4 @@
 
 echo "🎯 Running Prettier + ESLint checks..."
 npx lint-staged
+npx lint-staged
