@@ -1,7 +1,7 @@
 
 import PropTypes from "prop-types";
 
-const AboutMe = ({ name, age, favHobby }) => {
+const AboutMe = ( name, age, favHobby }) => {
   return (
     <div style={{ border: "1px solid #ccc", padding: "20px", borderRadius: "8px", maxWidth: "400px" }}>
       <h2>About Me</h2>
