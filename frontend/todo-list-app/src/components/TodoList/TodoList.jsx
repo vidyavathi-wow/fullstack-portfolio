@@ -1,27 +1,48 @@
-import { memo, useState, useEffect } from "react";
-import styles from "./TodoList.module.css";
-import useLocalStorage from "../../Customhooks/UseLocalStorage.js";
-import useToggle from "../../Customhooks/useToggle.js";
-import TodoItem from "../TodoItem/TodoItem.jsx";
+import { memo, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import styles from './TodoList.module.css';
+import useLocalStorage from '../../customhooks/UseLocalStorage.js';
+import useToggle from '../../customhooks/useToggle.js';
+import TodoItem from '../TodoItem/TodoItem.jsx';
+import EmptyState from '../EmptyState.jsx';
+import Button from '../common/Button/Button.jsx';
+import Dropdown from '../common/Dropdown/Dropdown.jsx';
+import Input from '../common/Input/Input.jsx';
 
 function TodoList() {
-  const [items, setItems] = useLocalStorage("todos", []);
+  const [items, setItems] = useLocalStorage('todos', []);
   const [taskItem, setTaskItem] = useState({
-    id: "",
-    task: "",
-    category: "",
+    id: '',
+    task: '',
+    category: '',
     isCompleted: false,
   });
   const [showCompleted, toggleShowCompleted] = useToggle(false);
-  const [filterCategory, setFilterCategory] = useState("");
+  const [filterCategory, setFilterCategory] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleAddTask = () => {
     if (!taskItem.task.trim()) return;
-    setItems((prev) => [
-      ...prev,
-      { ...taskItem, id: prev.length + 1 },
-    ]);
-    setTaskItem({ id: "", task: "", category: "", isCompleted: false });
+
+    if (isEditing) {
+      const updatedItems = items.map((item) =>
+        item.id === taskItem.id ? { ...taskItem } : item
+      );
+      setItems(updatedItems);
+      toast.success(`Task "${taskItem.task}" updated`);
+      setIsEditing(false);
+    } else {
+      setItems((prev) => [...prev, { ...taskItem, id: prev.length + 1 }]);
+      toast.success(`Task "${taskItem.task}" added`);
+    }
+
+    setTaskItem({ id: '', task: '', category: '', isCompleted: false });
+  };
+
+  const handleEdit = (index) => {
+    const item = items[index];
+    setTaskItem(item);
+    setIsEditing(true);
   };
 
   const handleToggle = (index) => {
@@ -29,11 +50,19 @@ function TodoList() {
       i === index ? { ...item, isCompleted: !item.isCompleted } : item
     );
     setItems(updatedItems);
+
+    const action = updatedItems[index].isCompleted
+      ? 'completed'
+      : 'marked incomplete';
+    toast.success(`Task "${updatedItems[index].task}" ${action}`);
   };
 
   const handleDelete = (index) => {
+    const taskName = items[index].task;
     const filteredItems = items.filter((_, ind) => ind !== index);
     setItems(filteredItems);
+
+    toast.error(`Task "${taskName}" deleted`);
   };
 
   const displayedItems = showCompleted
@@ -50,74 +79,75 @@ function TodoList() {
     const pending = total - completed;
 
     const categoryCount = items.reduce((acc, curr) => {
-      const cat = curr.category || "Uncategorized";
+      const cat = curr.category || 'Uncategorized';
       acc[cat] = (acc[cat] || 0) + 1;
       return acc;
     }, {});
 
     const analytics = { total, completed, pending, categoryCount };
-    localStorage.setItem("todoAnalytics", JSON.stringify(analytics));
+    localStorage.setItem('todoAnalytics', JSON.stringify(analytics));
   }, [items]);
-   if (taskItem.task === "throw-error") {
-      throw new Error("Deliberate error thrown!");
-    }
+
+  if (taskItem.task === 'throw-error') {
+    throw new Error('Deliberate error thrown!');
+  }
 
   return (
     <div className={styles.container}>
       <h1>Todo List</h1>
 
-
       <div className={styles.form}>
-        <input
-          type="text"
-          value={taskItem.task}
-          placeholder="Enter task item"
-          onChange={(e) =>
-            setTaskItem({ ...taskItem, task: e.target.value })
-          }
+        <div className={styles.addfields}>
+       <Input
+  type="text"
+  value={taskItem.task}
+  placeholder="Enter task item"
+  onChange={(val) => setTaskItem({ ...taskItem, task:val })}
+/>
+
+
+        <Dropdown
+          options={['Work', 'Personal', 'Study', 'Other']}
+          value={taskItem.category}
+          onChange={(val) => setTaskItem({ ...taskItem, category: val })}
+          placeholder="Select Category"
         />
 
-        <select
-          value={taskItem.category}
-          onChange={(e) =>
-            setTaskItem({ ...taskItem, category: e.target.value })
-          }
-        >
-          <option value="">Select Category</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Study">Study</option>
-          <option value="Other">Other</option>
-        </select>
+        <Button onClick={handleAddTask} variant="primary">
+          {isEditing ? 'Update Task' : 'Add Task'}
+        </Button>
 
-        <button onClick={handleAddTask}>Add Task</button>
+        </div>
 
-        <button onClick={toggleShowCompleted}>
-          {showCompleted ? "Show All" : "Show Completed"}
-        </button>
+        <div className={styles.filters}>
+          <Button onClick={toggleShowCompleted} variant="secondary">
+            {showCompleted ? 'Show All' : 'Show Completed'}
+          </Button>
 
-        <select
-          value={filterCategory}
-          onChange={(e) => setFilterCategory(e.target.value)}
-        >
-          <option value="">Filter by Category</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Study">Study</option>
-          <option value="Other">Other</option>
-        </select>
+          <Dropdown
+            options={['Work', 'Personal', 'Study', 'Other']}
+            value={filterCategory}
+            onChange={setFilterCategory}
+            placeholder="Filter by Category"
+          />
+        </div>
       </div>
 
       <ul>
-        {filteredItems.map((item, index) => (
-          <TodoItem
-            key={item.id}
-            item={item}
-            index={index}
-            onDelete={handleDelete}
-            onToggle={handleToggle}
-          />
-        ))}
+        {filteredItems.length === 0 ? (
+          <EmptyState message="No tasks found. Add a new one!" />
+        ) : (
+          filteredItems.map((item, index) => (
+            <TodoItem
+              key={item.id}
+              item={item}
+              index={index}
+              onDelete={handleDelete}
+              onToggle={handleToggle}
+              onEdit={handleEdit}
+            />
+          ))
+        )}
       </ul>
     </div>
   );
