@@ -30,13 +30,9 @@
       "prettier --write",
       "eslint --fix"
     ],
-    "frontend/todo-list-app/src/**/*.{js,jsx,ts,tsx,css,md,json}": [
-      "npx prettier --write",
-      "npx eslint --fix"
-    ],
-    "assignments/week3/**/src/**/*.{js,jsx,ts,tsx,css,md,json}": [
-      "npx prettier --write",
-      "npx eslint --fix"
+    "**/*.{js,jsx,ts,tsx,css,md,json}": [
+      "prettier --write",
+      "eslint --fix"
     ]
   }
 }
