@@ -1,11 +1,17 @@
+import babelParser from '@babel/eslint-parser';
 import reactPlugin from 'eslint-plugin-react';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
   {
-    files: ['**/*.{js,jsx}'], // recursively match all JS/JSX files
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
+      parser: babelParser,
       parserOptions: {
+        requireConfigFile: false,
+        babelOptions: {
+          presets: ['@babel/preset-react'],
+        },
         ecmaVersion: 2021,
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
@@ -13,11 +19,10 @@ export default [
       globals: {
         window: 'readonly',
         document: 'readonly',
+        process: 'readonly',
       },
     },
-    plugins: {
-      react: reactPlugin,
-    },
+    plugins: { react: reactPlugin },
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',

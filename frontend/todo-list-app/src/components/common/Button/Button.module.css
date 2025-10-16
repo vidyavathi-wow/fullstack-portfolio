@@ -5,11 +5,14 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px; 
+  gap: 6px;
 }
 
 .button:disabled {
@@ -19,32 +22,31 @@
 }
 
 .primary {
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
 }
 
 .primary:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: var(--primaryHover);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .secondary {
-  background-color: #e0e0e0;
-  color: #333;
+  background-color: var(--secondary);
+  color: var(--textDark);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: #d5d5d5;
+  background-color: var(--secondaryHover);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Danger Variant */
 .danger {
-  background-color: #f44336;
-  color: white;
+  background-color: var(--danger);
+  color: var(--white);
 }
 
 .danger:hover:not(:disabled) {
-  background-color: #da190b;
+  background-color: var(--dangerHover);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }

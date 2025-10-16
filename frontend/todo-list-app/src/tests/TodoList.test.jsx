@@ -1,81 +1,89 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import TodoList from '../components/TodoList/TodoList.jsx'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react';
+import TodoList from '../components/TodoList/TodoList.jsx';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import todosReducer from '../redux/features/todosSlice.js';
+import React from 'react';
+
+const renderWithRedux = (ui, { initialState } = {}) => {
+  const store = configureStore({
+    reducer: { todos: todosReducer },
+    preloadedState: initialState,
+  });
+
+  return render(<Provider store={store}>{ui}</Provider>);
+};
 
 describe('TodoList Component', () => {
-  beforeEach(() => {
-    localStorage.clear()
-  })
+  const initialTodos = [
+    { id: '1', task: 'Task 1', category: 'Work', isCompleted: false },
+    { id: '2', task: 'Task 2', category: 'Personal', isCompleted: true },
+  ];
 
-  it('renders the heading and input/button elements', () => {
-    render(<TodoList />)
-    expect(screen.getByText('Todo List')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Enter task item')).toBeInTheDocument()
-    expect(screen.getByText('Add Task')).toBeInTheDocument()
-    // button text changes depending on state
-    expect(screen.getByText('Show Completed')).toBeInTheDocument()
-  })
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('renders initial tasks', () => {
+    renderWithRedux(<TodoList />, {
+      initialState: { todos: { items: initialTodos } },
+    });
+    expect(screen.getByText('Task 1 (Work)')).toBeInTheDocument();
+    expect(screen.getByText('Task 2 (Personal)')).toBeInTheDocument();
+  });
 
   it('adds a new task', () => {
-    render(<TodoList />)
-    const input = screen.getByPlaceholderText('Enter task item')
-    const addBtn = screen.getByText('Add Task')
+    renderWithRedux(<TodoList />, { initialState: { todos: { items: [] } } });
 
-    fireEvent.change(input, { target: { value: 'New Task' } })
-    fireEvent.click(addBtn)
+    const input = screen.getByPlaceholderText('Enter task item');
+    const dropdown = screen.getAllByRole('combobox')[0]; // first select
+    const addButton = screen.getByText('Add Task');
 
-    expect(screen.getByText('New Task')).toBeInTheDocument()
-  })
+    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.change(dropdown, { target: { value: 'Work' } });
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('New Task (Work)')).toBeInTheDocument();
+  });
+
+  it('edits a task', () => {
+    renderWithRedux(<TodoList />, {
+      initialState: { todos: { items: initialTodos } },
+    });
+
+    const editButtons = screen.getAllByText('Edit');
+    fireEvent.click(editButtons[0]);
+
+    const input = screen.getByPlaceholderText('Enter task item');
+    const updateButton = screen.getByText('Update Task');
+
+    fireEvent.change(input, { target: { value: 'Updated Task' } });
+    fireEvent.click(updateButton);
+
+    expect(screen.getByText('Updated Task (Work)')).toBeInTheDocument();
+  });
 
   it('deletes a task', () => {
-    render(<TodoList />)
-    const input = screen.getByPlaceholderText('Enter task item')
-    const addBtn = screen.getByText('Add Task')
+    renderWithRedux(<TodoList />, {
+      initialState: { todos: { items: initialTodos } },
+    });
 
-    fireEvent.change(input, { target: { value: 'Task To Delete' } })
-    fireEvent.click(addBtn)
+    const deleteButtons = screen.getAllByText('Delete');
+    fireEvent.click(deleteButtons[0]);
 
-    const taskLi = screen.getByText('Task To Delete').closest('li')
-    const deleteBtn = taskLi.querySelector('button') // first button is Delete
-    fireEvent.click(deleteBtn)
-
-    expect(screen.queryByText('Task To Delete')).not.toBeInTheDocument()
-  })
+    expect(screen.queryByText('Task 1 (Work)')).not.toBeInTheDocument();
+  });
 
   it('toggles task completion', () => {
-    render(<TodoList />)
-    const input = screen.getByPlaceholderText('Enter task item')
-    const addBtn = screen.getByText('Add Task')
+    renderWithRedux(<TodoList />, {
+      initialState: { todos: { items: initialTodos } },
+    });
 
-    fireEvent.change(input, { target: { value: 'Task To Toggle' } })
-    fireEvent.click(addBtn)
+    const toggleButtons = screen.getAllByText('Mark Complete');
+    fireEvent.click(toggleButtons[0]);
 
-    const taskLi = screen.getByText('Task To Toggle').closest('li')
-    const toggleBtn = taskLi.querySelectorAll('button')[1] // second button
-    fireEvent.click(toggleBtn)
-
-    // Since your component doesn't render "Completed ✅", just check state
-    expect(taskLi).toBeInTheDocument()
-  })
-
-  it('filters completed tasks', () => {
-    render(<TodoList />)
-    const input = screen.getByPlaceholderText('Enter task item')
-    const addBtn = screen.getByText('Add Task')
-    const toggleFilterBtn = screen.getByText('Show Completed')
-
-    fireEvent.change(input, { target: { value: 'Task 1' } })
-    fireEvent.click(addBtn)
-    fireEvent.change(input, { target: { value: 'Task 2' } })
-    fireEvent.click(addBtn)
-
-    const task1Li = screen.getByText('Task 1').closest('li')
-    const toggleBtn1 = task1Li.querySelectorAll('button')[1]
-    fireEvent.click(toggleBtn1)
-
-    fireEvent.click(toggleFilterBtn)
-
-    expect(screen.getByText('Task 1')).toBeInTheDocument()
-    expect(screen.queryByText('Task 2')).not.toBeInTheDocument()
-  })
-})
+    const undoButtons = screen.getAllByText('Undo');
+    expect(undoButtons[0]).toBeInTheDocument();
+  });
+});

@@ -1,11 +1,10 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import { NavLink } from 'react-router-dom';
+import styles from './Navbar.module.css';
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Todo List", path: "/todos" },
-  { name: "About", path: "/about" },
+  { name: 'Home', path: '/' },
+  { name: 'Todo List', path: '/todos' },
+  { name: 'About', path: '/about' },
 ];
 
 const Navbar = () => {
@@ -17,7 +16,7 @@ const Navbar = () => {
           <li key={link.path}>
             <NavLink
               to={link.path}
-              className={({ isActive }) => (isActive ? styles.active : "")}
+              className={({ isActive }) => (isActive ? styles.active : '')}
             >
               {link.name}
             </NavLink>

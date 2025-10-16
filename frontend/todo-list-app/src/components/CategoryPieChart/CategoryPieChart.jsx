@@ -1,13 +1,28 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import styled from 'styled-components';
+import EmptyState from '../EmptyState';
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const Heading = styled.h3`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const Paragraph = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
 
 const CategoryPieChart = ({ data }) => {
-  if (!data || data.length === 0) return <p>No category data</p>;
+  if (!data || data.length === 0)
+    return <EmptyState message="No Category Data">No category data</EmptyState>;
 
   return (
     <div>
-      <h4>Task Categories</h4>
+      <Heading>Task Categories</Heading>
       <PieChart width={400} height={300}>
         <Pie data={data} dataKey="value" nameKey="name" outerRadius={100} label>
           {data.map((entry, index) => (

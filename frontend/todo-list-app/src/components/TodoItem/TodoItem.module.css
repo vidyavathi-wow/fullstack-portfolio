@@ -6,6 +6,7 @@
   margin-bottom: 10px;
   background-color: #fafafa;
   border-radius: 8px;
+  width: 100%;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s;
   word-break: break-word;
@@ -56,17 +57,15 @@
   .actions {
     width: 100%;
     display: flex;
-    gap: 6px;
-    flex-wrap: nowrap; /* prevent wrapping */
-    justify-content: space-between; /* spread buttons */
+    justify-content: space-between;
+    gap: 4px;
   }
 
   .actions button {
-    flex: 1 1 auto; /* allow buttons to shrink/grow */
-    min-width: 0; /* remove fixed width constraint */
-    font-size: 13px;
-    padding: 6px;
+    flex: 1 1;
+    min-width: 0;
+    font-size: 12px;
+    padding: 5px 6px;
     text-align: center;
-    white-space: nowrap;
   }
 }

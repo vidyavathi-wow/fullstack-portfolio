@@ -145,7 +145,7 @@ function TodoList() {
             onClick={() => setShowCompleted((prev) => !prev)}
             variant="secondary"
           >
-            {showCompleted ? 'Show All' : 'Show Completed'}
+            {showCompleted ? 'Show All' : 'Completed'}
           </Button>
 
           <Dropdown

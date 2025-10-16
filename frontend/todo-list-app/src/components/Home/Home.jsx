@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import CategoryPieChart from "../CategoryPieChart/CategoryPieChart.jsx";
-import StatusBarChart from "../StatusBarChart/StatusBarChart.jsx";
+import { useEffect, useState } from 'react';
+import CategoryPieChart from '../CategoryPieChart/CategoryPieChart.jsx';
+import StatusBarChart from '../StatusBarChart/StatusBarChart.jsx';
+import styles from './Home.module.css';
 
 const Home = () => {
   const [analytics, setAnalytics] = useState(null);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("todoAnalytics"));
+    const data = JSON.parse(localStorage.getItem('todoAnalytics'));
     setAnalytics(data);
   }, []);
 
@@ -17,20 +18,24 @@ const Home = () => {
   );
 
   const statusData = [
-    { name: "Completed", count: analytics.completed },
-    { name: "Pending", count: analytics.pending },
+    { name: 'Completed', count: analytics.completed },
+    { name: 'Pending', count: analytics.pending },
   ];
 
   return (
-    <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "40px" }}>
-      <h2>📊 Dashboard Analytics</h2>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>📊 Dashboard Analytics</h2>
 
-      <div style={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
-        <CategoryPieChart data={categoryData} />
-        <StatusBarChart data={statusData} />
+      <div className={styles.charts}>
+        <div className={styles.chartBox}>
+          <CategoryPieChart data={categoryData} />
+        </div>
+        <div className={styles.chartBox}>
+          <StatusBarChart data={statusData} />
+        </div>
       </div>
 
-      <div>
+      <div className={styles.summary}>
         <h4>Total Tasks: {analytics.total}</h4>
         <h4>Completed: {analytics.completed}</h4>
         <h4>Pending: {analytics.pending}</h4>
