@@ -1,0 +1,19 @@
+.dropdown {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.dropdown:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.dropdown:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
