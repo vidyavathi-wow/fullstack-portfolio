@@ -1,0 +1,17 @@
+:root {
+  --primary: #4caf50;
+  --primaryHover: #45a049;
+  --secondary: #e0e0e0;
+  --secondaryHover: #d5d5d5;
+  --danger: #f44336;
+  --dangerHover: #da190b;
+  --textDark: #333;
+  --white: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

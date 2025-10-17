@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.addfields {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.addfields input,
+.addfields select {
+  flex: 1 1 auto;
+  min-width: 120px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.addfields button {
+  flex: 0 0 110px;
+  white-space: nowrap;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filters select {
+  flex: 2 1 150px;
+  min-width: 150px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.filters button {
+  flex: 0 0 130px;
+  white-space: nowrap;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .addfields {
+    align-items: stretch;
+  }
+
+  .filters {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .filters select {
+    flex: 2 1 0;
+    min-width: 0;
+  }
+
+  .filters button {
+    flex: 0 1 auto;
+    min-width: 80px;
+    font-size: 13px;
+    padding: 6px;
+    text-align: center;
+  }
+
+  ul {
+    width: 100%;
+  }
+}
