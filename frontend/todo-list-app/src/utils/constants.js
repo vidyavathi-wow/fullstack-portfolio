@@ -10,4 +10,7 @@ export const COLORS = {
   textLight: '#666',
   border: '#ddd',
   background: '#ffffff',
+
+  // Chart palette for variety
+  chartPalette: ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'],
 };

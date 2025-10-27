@@ -17,13 +17,11 @@ const Div = styled.div`
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <Div role="alert">
-      <Card>
-        <p>Something went wrong:</p>
-        <pre style={{ whiteSpace: 'pre-wrap' }}>{error.message}</pre>
-        <Button onClick={resetErrorBoundary} variant="danger">
-          Try Again
-        </Button>
-      </Card>
+      <p>Something went wrong:</p>
+      <pre style={{ whiteSpace: 'pre-wrap' }}>{error.message}</pre>
+      <Button onClick={resetErrorBoundary} variant="danger">
+        Try Again
+      </Button>
     </Div>
   );
 }

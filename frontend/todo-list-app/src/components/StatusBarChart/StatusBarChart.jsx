@@ -1,39 +1,36 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
-
 import styled from 'styled-components';
+import BarChartWrapper from '../wrappers/BarChartWrapper';
+import { COLORS } from '../../utils/constants';
+
+const Heading = styled.h3`
+  text-align: center;
+  margin-bottom: 20px;
+  color: ${COLORS.textDark};
+`;
 
 const StatusBarChart = ({ data }) => {
   if (!data || data.length === 0) return <p>No status data</p>;
 
-  const Heading = styled.h3`
-    text-align: center;
-    margin-bottom: 20px;
-  `;
+  // Optional: map colors dynamically based on status
+  const statusColorMap = {
+    Completed: COLORS.primary,
+    Pending: COLORS.danger,
+  };
+
+  const coloredData = data.map((item) => ({
+    ...item,
+    fill: statusColorMap[item.name] || COLORS.primary,
+  }));
 
   return (
     <div>
       <Heading>Task Status</Heading>
-      <BarChart
-        width={400}
-        height={300}
-        data={data}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#82ca9d" />
-      </BarChart>
+      <BarChartWrapper
+        data={coloredData}
+        dataKey="count"
+        nameKey="name"
+        color={null} // allows per-bar colors via data.fill
+      />
     </div>
   );
 };
