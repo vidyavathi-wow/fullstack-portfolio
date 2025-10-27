@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import CategoryPieChart from '../CategoryPieChart/CategoryPieChart.jsx';
 import StatusBarChart from '../StatusBarChart/StatusBarChart.jsx';
 import styles from './Home.module.css';
+import EmptyState from '../EmptyState.jsx';
 
 const Home = () => {
   const [analytics, setAnalytics] = useState(null);
@@ -11,7 +12,7 @@ const Home = () => {
     setAnalytics(data);
   }, []);
 
-  if (!analytics) return <p>No analytics data available</p>;
+  if (!analytics) return <EmptyState>No analytics data available</EmptyState>;
 
   const categoryData = Object.entries(analytics.categoryCount).map(
     ([name, value]) => ({ name, value })
