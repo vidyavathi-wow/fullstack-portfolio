@@ -24,12 +24,20 @@ export default [
     },
     plugins: { react: reactPlugin },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
       semi: ['error', 'always'],
       quotes: ['error', 'double'],
       indent: ['error', 2],
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/prop-types': 'off',
       ...prettierConfig.rules,
+      'no-console': 'error',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
   },
 ];
