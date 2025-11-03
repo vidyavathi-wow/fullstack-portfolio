@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import AppContext from '../../context/AppContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-
+import Select from '../../components/common/Select';
 export default function Signup() {
   const navigate = useNavigate();
   const { axios } = useContext(AppContext);
@@ -32,8 +32,13 @@ export default function Signup() {
       } else {
         toast.error(data.message);
       }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Signup failed');
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.errors) {
+        const messages = error.response.data.errors.map((err) => err.msg);
+        messages.forEach((msg) => toast.error(msg));
+      } else {
+        toast.error(error.message || 'Signup failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -42,7 +47,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-dark text-gray-light px-4">
       <div className="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">
+        <h2 className="text-2xl text-primary font-semibold text-center mb-6">
           Create an Account
         </h2>
 
@@ -86,6 +91,20 @@ export default function Signup() {
               noDefault
               placeholder="Enter your password"
               className="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-sm">Role</label>
+            <Select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              options={[
+                { label: 'User', value: 'user' },
+                { label: 'Admin', value: 'admin' },
+              ]}
+              required
             />
           </div>
 

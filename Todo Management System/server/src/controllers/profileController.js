@@ -1,0 +1,81 @@
+const User = require('../models/User');
+const ActivityLog = require('../models/ActivityLog');
+
+exports.getProfile = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      console.log('ERROR: No user in request');
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'name', 'email', 'profilePic', 'createdAt'],
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    }
+
+    const profileWithDefault = {
+      ...user.toJSON(),
+      profilePic: user.profilePic || null,
+    };
+    return res.status(200).json({ success: true, user: profileWithDefault });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: 'Server error: ' + error.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    }
+
+    if (name && name.trim()) {
+      user.name = name.trim();
+    }
+
+    if (email && email.trim()) {
+      user.email = email.trim();
+    }
+
+    if (req.file && req.file.path) {
+      user.profilePic = req.file.path;
+    }
+
+    await user.save();
+
+    const response = {
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
+    };
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to update profile',
+    });
+  }
+};

@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+import axiosInstance from '../api/axiosInstance';
 
 const AppContext = createContext();
 
@@ -14,44 +12,66 @@ export const AppProvider = ({ children }) => {
   const [input, setInput] = useState('');
   const [editTodo, setEditTodo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common['Authorization'] =
+        `Bearer ${token}`;
     } else {
-      delete axios.defaults.headers.common['Authorization'];
+      delete axiosInstance.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
+    if (storedToken) setToken(storedToken);
     setLoading(false);
   }, []);
 
   useEffect(() => {
     if (token) {
       fetchTodos();
+      fetchUserProfile();
     }
   }, [token]);
 
+  const fetchUserProfile = async () => {
+    try {
+      const { data } = await axiosInstance.get('/api/v1/profile');
+      if (data.success) {
+        setUser(data.user);
+      } else {
+        toast.error(data.message || 'Failed to fetch profile');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
+
   const fetchTodos = async () => {
     try {
-      const { data } = await axios.get('/api/v1/todos');
+      const { data } = await axiosInstance.get('/api/v1/todos');
       if (data.success) {
         setTodos(data.todos);
       } else {
-        toast.error(data.message);
+        toast.error(data.message || 'Failed to fetch todos');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to fetch todos');
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((err) => toast.error(err.msg));
+      } else {
+        toast.error(
+          error.response?.data?.message ||
+            error.message ||
+            'Something went wrong'
+        );
+      }
     }
   };
 
   const value = {
-    axios,
+    axios: axiosInstance,
     navigate,
     token,
     setToken,
@@ -63,6 +83,7 @@ export const AppProvider = ({ children }) => {
     setEditTodo,
     fetchTodos,
     loading,
+    user,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
