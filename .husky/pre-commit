@@ -1,4 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "🎯 Running Prettier + ESLint checks..."
+npx lint-staged
 npx lint-staged
