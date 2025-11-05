@@ -4,12 +4,11 @@ const ActivityLog = require('../models/ActivityLog');
 exports.getProfile = async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
-      console.log('ERROR: No user in request');
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'name', 'email', 'profilePic', 'createdAt'],
+      attributes: ['id', 'name', 'email', 'profilePic', 'role', 'createdAt'],
     });
 
     if (!user) {
@@ -22,6 +21,7 @@ exports.getProfile = async (req, res) => {
       ...user.toJSON(),
       profilePic: user.profilePic || null,
     };
+
     return res.status(200).json({ success: true, user: profileWithDefault });
   } catch (error) {
     return res
@@ -68,9 +68,9 @@ exports.updateProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         profilePic: user.profilePic,
+        role: user.role,
       },
     };
-
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({

@@ -4,11 +4,11 @@ import { BarChartBox } from '../components/analytics/wrappers/BarChartBox';
 import AnalyticsCard from '../components/analytics/wrappers/AnalyticsCard';
 import AppContext from '../context/AppContext';
 import Loader from '../components/common/Loader';
-import { ANALYTICS_COLORS } from '../utils/Constants';
+import { ANALYTICS_COLORS } from '../utils/Constants.jsx';
 import EmptyState from '../components/common/EmptyState';
 
 export default function Analytics() {
-  const { axios, fetchTodos } = useContext(AppContext);
+  const { axios, fetchTodos, todos } = useContext(AppContext);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ export default function Analytics() {
       }
     };
     fetchAnalytics();
-  }, []);
+  }, [todos]);
 
   if (loading) return <Loader />;
   if (!analytics) return <EmptyState message="No Analytics Data" />;
