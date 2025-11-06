@@ -24,10 +24,9 @@ const Sidebar = () => {
     { name: 'Activity Logs', path: '/activity-logs', icon: <FiClock /> },
   ];
 
-  // ✅ Add admin-only menu item
   if (user?.role === 'admin') {
     menuItems.unshift({
-      name: 'Admin Dashboard',
+      name: 'Admin Hub',
       path: '/admin',
       icon: <FiUsers />,
     });
