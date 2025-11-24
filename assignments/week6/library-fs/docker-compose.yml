@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: pern_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:6
+    container_name: pern_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongodata:/data/db
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pern_backend
+    restart: always
+    ports:
+      - "5005:5000"
+    depends_on:
+      - postgres
+      - mongo
+    environment:
+      PORT: ${PORT}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_PORT: ${DB_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      REFRESH_SECRET: ${REFRESH_SECRET}
+      MONGO_URI: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/librarydb?authSource=admin
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_BASE_URL: ${VITE_BASE_URL}
+    container_name: pern_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
+  mongodata:

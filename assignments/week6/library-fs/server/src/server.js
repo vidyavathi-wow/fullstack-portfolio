@@ -8,7 +8,7 @@ const authRouter = require('./routes/authRouter');
 const booksRouter = require('./routes/booksRouter');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
-const connectMongo = require('./db/Monogo');
+const connectMongo = require('./db/Mongo');
 const preferencesRouter = require('./routes/preferencesRouter');
 
 const app = express();

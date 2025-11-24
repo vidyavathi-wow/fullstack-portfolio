@@ -16,7 +16,6 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const res = error.response;
-
     if (res?.data?.errors && Array.isArray(res.data.errors)) {
       res.data.errors.forEach((err) => toast.error(err.msg));
     } else if (res?.data?.message) {
